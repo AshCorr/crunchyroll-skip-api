@@ -35,8 +35,8 @@ pipeline {
 
       }
       steps {
-        withCredentials([file(credentialsId: 'ashcorr-kubeconf-credentials', variable: 'KUBECONF_FILE')]) {
-          sh 'kubectl --kubeconf $KUBECONF_FILE set image --namespace crunchyroll deployment/crunchyroll-skip-api crunchyroll-skip-api=ashcorr/crunchyrollapi:${BUILD_NUMBER}'
+        withCredentials([file(credentialsId: 'ashcorr-kubeconf-credentials', variable: 'KUBECONFIG')]) {
+          sh 'kubectl set image --namespace crunchyroll deployment/crunchyroll-skip-api crunchyroll-skip-api=ashcorr/crunchyrollapi:${BUILD_NUMBER}'
         }
       }
     }
