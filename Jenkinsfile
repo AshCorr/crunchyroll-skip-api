@@ -27,7 +27,6 @@ pipeline {
       }
     }
 
-
     stage('Deploy') {
       agent {
         docker {
@@ -35,8 +34,8 @@ pipeline {
         }
       }
       steps {
-        withKubeConfig([credentialsId: 'ashcorr-kubeconf-credentials']) {
-          sh 'kubectl set image --namespace crunchyroll deployment/crunchyroll-skip-api crunchyroll-skip-api=ashcorr/crunchyrollapi:${BUILD_NUMBER}'
+        withCredentials([file(credentialsId: 'ashcorr-kubeconf-credentials', variable: 'KUBECONF_FILE')]) {
+          sh 'kubectl set image --kubeconf $KUBECONF_FILE --namespace crunchyroll deployment/crunchyroll-skip-api crunchyroll-skip-api=ashcorr/crunchyrollapi:${BUILD_NUMBER}'
         }
       }
     }
