@@ -24,4 +24,10 @@ public class VideoInfo {
     @NotNull
     @Column(name = "NAME")
     private String name;
+
+    @Column(name = "INTRO_START")
+    private int introStart;
+
+    @Column(name = "INTRO_END")
+    private int introEnd;
 }
