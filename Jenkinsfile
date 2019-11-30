@@ -6,25 +6,27 @@ pipeline {
         }
     }
 
-    stage('Clone repository') {
-        checkout scm
-    }
+    stages {
+        stage('Clone repository') {
+            checkout scm
+        }
 
-    stage('Build') {
-        sh 'mvn clean package -Dproduction'
-    }
+        stage('Build') {
+            sh 'mvn clean package -Dproduction'
+        }
 
-    stage('Build image') {
-        app = docker.build("ashcorr/crunchyrollapi")
-        docker.withRegistry('https://registry.hub.docker.com', 'ashcorr-docker-hub-credentials') {
-                    app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
-                }
-    }
+        stage('Build image') {
+            app = docker.build("ashcorr/crunchyrollapi")
+            docker.withRegistry('https://registry.hub.docker.com', 'ashcorr-docker-hub-credentials') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+        }
 
-    stage('Deploy') {
-        withKubeConfig([credentialsId: 'ashcorr-kubeconf-credentials']) {
-            sh 'kubectl set image --namespace crunchyroll deployment/crunchyrollapi crunchyrollapi=ashcorr/crunchyrollapi:${BUILD_NUMBER}'
+        stage('Deploy') {
+            withKubeConfig([credentialsId: 'ashcorr-kubeconf-credentials']) {
+                sh 'kubectl set image --namespace crunchyroll deployment/crunchyrollapi crunchyrollapi=ashcorr/crunchyrollapi:${BUILD_NUMBER}'
+            }
         }
     }
 }
