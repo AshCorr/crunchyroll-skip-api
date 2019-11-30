@@ -1,6 +1,5 @@
 pipeline {
   agent none
-
   stages {
     stage('Build') {
       agent {
@@ -8,6 +7,7 @@ pipeline {
           image 'maven:3-alpine'
           args '-v /root/.m2:/root/.m2'
         }
+
       }
       steps {
         sh 'mvn clean package -Dproduction'
@@ -32,6 +32,7 @@ pipeline {
         docker {
           image 'bitnami/kubectl'
         }
+
       }
       steps {
         withCredentials([file(credentialsId: 'ashcorr-kubeconf-credentials', variable: 'KUBECONF_FILE')]) {
