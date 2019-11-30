@@ -1,6 +1,5 @@
 pipeline {
   agent none
-
   stages {
     stage('Build') {
       agent {
@@ -8,6 +7,7 @@ pipeline {
           image 'maven:3-alpine'
           args '-v /root/.m2:/root/.m2'
         }
+
       }
       steps {
         sh 'mvn clean package -Dproduction'
@@ -27,17 +27,18 @@ pipeline {
       }
     }
 
-
     stage('Deploy') {
       agent {
         docker {
           image 'bitnami/kubectl'
         }
+
       }
       steps {
-        withKubeConfig([credentialsId: 'ashcorr-kubeconf-credentials']) {
-          sh 'kubectl set image --namespace crunchyroll deployment/crunchyroll-skip-api crunchyroll-skip-api=ashcorr/crunchyrollapi:${BUILD_NUMBER}'
+        withKubeConfig(credentialsId: 'ashcorr-kubeconf-credentials') {
+          sh 'echo test'
         }
+
       }
     }
 
