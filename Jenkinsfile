@@ -30,7 +30,7 @@ pipeline {
     stage('Deploy') {
       agent {
         docker {
-          image 'bitnami/kubectl'
+          image 'k3integrations/kubectl'
         }
 
       }
